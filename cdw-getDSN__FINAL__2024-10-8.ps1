@@ -918,7 +918,6 @@ if($delta -ne $null){ #if not empty then there are deltas!
     Write-Output "Report loc: `t$($report_dir)`n" | Out-File $report_dir\DSN_Delta_Detected.txt -Append
     Write-Output "CHANGE DETECTED BETWEEN DSN INFORMATION! Verify DSN settings on $($cn)!" | Out-File $report_dir\DSN_Delta_Detected.txt -Append
     $delta.GetEnumerator() | select @{n="DIFF!";e={$_.inputobject}},@{n="File";e={$_.sideindicator -replace ("=>","1_DSN_report @ $($1_ts.LastWriteTime.ToString("HH" + "mm" + "__yyyy_MM_dd"))") -replace ("<=","Today's DSN report @ $($date.ToString("HH" + "mm" + "__yyyy_MM_dd"))")}} | ft -AutoSize -Wrap | Out-File $report_dir\DSN_Delta_Detected.txt -Append
-#moved to below so alert email can be sent:    mi $report_dir\DSN_Delta_Detected.txt ("$($cn)__" + "DsnChangeDETECTED__" + "$($1_ts.LastWriteTime.ToString("HH" + "mm" + "__yyyy_MM_dd"))" + ".txt") -Force
     sleep -Milliseconds 50
     mi $report_dir\_DSN_Alpha.txt ("_DSN_AlphaTimeStamp__" + $($1_ts.LastWriteTime.ToString("HH" + "mm" + "__yyyy_MM_dd")) + ".txt") -force -Verbose
     sleep -Milliseconds 50
@@ -926,7 +925,6 @@ if($delta -ne $null){ #if not empty then there are deltas!
     sleep -Milliseconds 50
     $DISPLAY_RESULT = $true
     $report_HT += @{
-#!ADD report location to HT!!!!
         scriptREPORT_RESULT = "CHANGES DETECTED - view report for complete details listed in the above verbose output"
     }
 }
@@ -948,7 +946,7 @@ else{
     ii .
     $report_HT | ft -AutoSize
     Write-Output "`nCHANGES DETECTED - view report for complete details listed in the above verbose output"
-    Send-MailMessage -To "Jeff.Giese@va.gov" -From "DoNotReply$($cn)@va.gov" -SMTPServer "smtp.va.gov" -Subject "DSN Change from: '$($cn)' @ $HourMinDATE" -Body "See attached file for details:" -Attachments $report_dir\DSN_Delta_Detected.txt -Priority High
+    Send-MailMessage -To "name@test.gov" -From "DoNotReply$($cn)@va.gov" -SMTPServer "smtpSERVER.com" -Subject "DSN Change from: '$($cn)' @ $HourMinDATE" -Body "See attached file for details:" -Attachments $report_dir\DSN_Delta_Detected.txt -Priority High
     mi $report_dir\DSN_Delta_Detected.txt ("$($cn)__" + "DsnChangeDETECTED__" + "$($1_ts.LastWriteTime.ToString("HH" + "mm" + "__yyyy_MM_dd"))" + ".txt") -Force
 }
 sl $dir_b4
